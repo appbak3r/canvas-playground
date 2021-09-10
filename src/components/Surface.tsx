@@ -14,7 +14,7 @@ import { CanvasController } from "../lib/CanvasController";
 export const Surface = forwardRef<
   CanvasController,
   { children: ReactNode } & HTMLAttributes<HTMLCanvasElement>
->(({ children, ...rest }, forwardedRef) => {
+>(({ children, onClick, ...rest }, forwardedRef) => {
   const canvasRef = useRef<HTMLCanvasElement>();
 
   const [canvasController, setCanvasController] = useState<CanvasController>();
@@ -34,6 +34,7 @@ export const Surface = forwardRef<
   useEffect(() => {
     if (canvasRef.current && canvasRef.current.parentElement) {
       const controller = new CanvasController(canvasRef.current);
+
       controller.configure({
         dpi: window.devicePixelRatio,
         width: canvasRef.current.parentElement.clientWidth,
@@ -52,6 +53,10 @@ export const Surface = forwardRef<
       });
     };
 
+    if (onClick) {
+      canvasController?.events.on("click", onClick);
+    }
+
     window.addEventListener("resize", () => {
       canvasController?.configure({
         dpi: window.devicePixelRatio,
@@ -63,10 +68,13 @@ export const Surface = forwardRef<
     const timer = redraw();
 
     return () => {
+      if (onClick) {
+        canvasController?.events.off("click", onClick);
+      }
       canvasController?.destroy();
       window.cancelAnimationFrame(timer);
     };
-  }, [canvasController]);
+  }, [canvasController, onClick]);
 
   return (
     <SurfaceContext.Provider

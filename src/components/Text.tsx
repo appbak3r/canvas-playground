@@ -6,7 +6,6 @@ export type TextProps = CanvasObjectProps<TextObjectConfig>;
 
 export const Text = forwardRef<TextObject, TextProps>(
   ({ children, ...props }, ref) => {
-    console.log(props);
     useCanvasObject<TextObject, TextObjectConfig>(TextObject, props, ref);
 
     return null;

@@ -1,6 +1,7 @@
 import ColorHash from "color-hash";
 import { BaseCanvas } from "./BaseCanvas";
 import { CanvasObject, ObjectEvents, Point } from "./CanvasObject";
+import { getPointerPosition } from "./utils";
 
 const colorHash = new ColorHash();
 
@@ -13,7 +14,7 @@ export class HitCanvas extends BaseCanvas {
   private objectColors: WeakMap<CanvasObject, string> = new WeakMap();
 
   onClick = (event: MouseEvent) => {
-    const object = this.getObjectAtPixel(this.getPointerPosition(event));
+    const object = this.getObjectAtPixel(getPointerPosition(event));
 
     if (!object) {
       return;
@@ -23,8 +24,7 @@ export class HitCanvas extends BaseCanvas {
   };
 
   onPointerDown = (event: PointerEvent) => {
-    const object = this.getObjectAtPixel(this.getPointerPosition(event));
-    console.log(this.getPointerPosition(event));
+    const object = this.getObjectAtPixel(getPointerPosition(event));
 
     if (!object) {
       return;
@@ -110,18 +110,6 @@ export class HitCanvas extends BaseCanvas {
     );
 
     return `rgb(${pixel.slice(0, 3).join(",")})`;
-  }
-
-  /**
-   * Calculates pointer position respecting canvas offset
-   */
-  private getPointerPosition(event: PointerEvent | MouseEvent): Point {
-    const DOMRect = (event.target as HTMLCanvasElement).getBoundingClientRect();
-
-    return {
-      x: event.clientX - DOMRect.x,
-      y: event.clientY - DOMRect.y,
-    };
   }
 
   /**

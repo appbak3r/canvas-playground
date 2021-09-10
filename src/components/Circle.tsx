@@ -3,10 +3,12 @@ import { CircleObject, CircleObjectConfig } from "../lib/shapes/CircleObject";
 import { useMoveable } from "../hooks/useMoveable";
 import { CanvasObjectProps, useCanvasObject } from "../hooks/useCanvasObject";
 
-export type CircleProps = CanvasObjectProps<CircleObjectConfig>;
+export type CircleProps = CanvasObjectProps<CircleObjectConfig> & {
+  moveable?: boolean;
+};
 
 export const Circle = forwardRef<CircleObject, CircleProps>(
-  ({ children, ...props }, ref) => {
+  ({ children, moveable = true, ...props }, ref) => {
     const circle = useCanvasObject<CircleObject, CircleObjectConfig>(
       CircleObject,
       props,
@@ -14,13 +16,15 @@ export const Circle = forwardRef<CircleObject, CircleProps>(
     );
 
     useMoveable(circle, ({ x, y }) => {
-      circle.configure(
-        {
-          x: circle.config.x + x,
-          y: circle.config.y + y,
-        },
-        false
-      );
+      if (moveable) {
+        circle.configure(
+          {
+            x: circle.config.x + x,
+            y: circle.config.y + y,
+          },
+          false
+        );
+      }
     });
 
     return null;

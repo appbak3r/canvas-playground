@@ -1,16 +1,19 @@
 import { BaseCanvas, CanvasConfig } from "./BaseCanvas";
 import { CanvasObject } from "./CanvasObject";
 import { HitCanvas } from "./HitCanvas";
-import { createBlankCanvas } from "./utils";
+import { createBlankCanvas, getPointerPosition } from "./utils";
+import { CanvasEventMachine } from "./CanvasEventMachine";
 
 export class CanvasController extends BaseCanvas {
   private hitCanvas: HitCanvas;
+  public events = new CanvasEventMachine();
 
   constructor(element: HTMLCanvasElement) {
     super(element);
     this.hitCanvas = new HitCanvas(createBlankCanvas());
     this.element.addEventListener("click", this.hitCanvas.onClick);
     this.element.addEventListener("pointerdown", this.hitCanvas.onPointerDown);
+    this.element.addEventListener("click", this.onClick);
     this.clear();
   }
 
@@ -44,4 +47,11 @@ export class CanvasController extends BaseCanvas {
     super.destroy();
     this.hitCanvas.destroy();
   }
+
+  private onClick = (event: MouseEvent) => {
+    this.events.trigger("click", {
+      ...event,
+      data: getPointerPosition(event),
+    });
+  };
 }

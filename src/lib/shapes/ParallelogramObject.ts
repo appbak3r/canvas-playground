@@ -1,5 +1,6 @@
 import { CanvasController } from "../CanvasController";
 import { CanvasObject, CanvasObjectConfig, Point } from "../CanvasObject";
+import { getParallelogramArea } from "../utils";
 
 export type ParallelogramObjectConfig = CanvasObjectConfig<{
   a: Point;
@@ -46,5 +47,20 @@ export class ParallelogramObject extends CanvasObject<ParallelogramObjectConfig>
     const { context } = canvas;
 
     context.lineTo(end.x * canvas.dpi, end.y * canvas.dpi);
+  }
+
+  getCenter() {
+    const { a, b, c, d } = this.config;
+
+    return {
+      x: (a.x + b.x + c.x + d!.x) / 4,
+      y: (a.y + b.y + c.y + d!.y) / 4,
+    };
+  }
+
+  getArea() {
+    const { a, b, c } = this.config;
+
+    return getParallelogramArea(a, b, c);
   }
 }
