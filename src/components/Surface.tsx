@@ -1,5 +1,4 @@
 import {
-  createRef,
   forwardRef,
   HTMLAttributes,
   ReactNode,
@@ -7,11 +6,11 @@ import {
   useState,
 } from "react";
 import { SurfaceContext } from "./SurfaceContext";
-import mergeRefs from "react-merge-refs";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { CanvasController } from "../lib/CanvasController";
 
+// TODO: surface onClick should pass event with relative coords
 export const Surface = forwardRef<
   CanvasController,
   { children: ReactNode } & HTMLAttributes<HTMLCanvasElement>
@@ -33,26 +32,26 @@ export const Surface = forwardRef<
   }, [forwardedRef, canvasController]);
 
   useEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRef.current && canvasRef.current.parentElement) {
       const controller = new CanvasController(canvasRef.current);
       controller.configure({
         dpi: window.devicePixelRatio,
-        width: canvasRef.current!.parentElement!.clientWidth,
-        height: canvasRef.current!.parentElement!.clientHeight,
+        width: canvasRef.current.parentElement.clientWidth,
+        height: canvasRef.current.parentElement.clientHeight,
       });
 
       setCanvasController(controller);
     }
   }, [canvasRef]);
 
-  const redraw = () => {
-    return window.requestAnimationFrame(() => {
-      canvasController?.redraw();
-      redraw();
-    });
-  };
-
   useEffect(() => {
+    const redraw = () => {
+      return window.requestAnimationFrame(() => {
+        canvasController?.redraw();
+        redraw();
+      });
+    };
+
     window.addEventListener("resize", () => {
       canvasController?.configure({
         dpi: window.devicePixelRatio,

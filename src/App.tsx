@@ -3,13 +3,7 @@ import { Circle } from "./components/Circle";
 import { Text } from "./components/Text";
 import { Parallelogram } from "./components/Parallelogram";
 import { StyledAppContainer, GlobalStyles } from "./styles";
-import {
-  Fragment,
-  MouseEventHandler,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { MouseEventHandler, useReducer, useRef, useState } from "react";
 import { CircleObject } from "./lib/shapes/CircleObject";
 import {
   ParallelogramObject,
@@ -124,6 +118,8 @@ export const App = () => {
   return (
     <StyledAppContainer>
       <GlobalStyles />
+      <button onClick={onReset}>reset</button>
+
       <Surface onClick={handleSurfaceClick}>
         {circles.current.length >= 3 && (
           <Parallelogram
@@ -175,7 +171,6 @@ export const App = () => {
           />
         ))}
       </Surface>
-      <button onClick={onReset}>reset</button>
     </StyledAppContainer>
   );
 };

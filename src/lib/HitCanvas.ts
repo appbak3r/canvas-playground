@@ -24,6 +24,7 @@ export class HitCanvas extends BaseCanvas {
 
   onPointerDown = (event: PointerEvent) => {
     const object = this.getObjectAtPixel(this.getPointerPosition(event));
+    console.log(this.getPointerPosition(event));
 
     if (!object) {
       return;
@@ -115,9 +116,11 @@ export class HitCanvas extends BaseCanvas {
    * Calculates pointer position respecting canvas offset
    */
   private getPointerPosition(event: PointerEvent | MouseEvent): Point {
+    const DOMRect = (event.target as HTMLCanvasElement).getBoundingClientRect();
+
     return {
-      x: event.clientX - this.element.offsetLeft,
-      y: event.clientY - this.element.offsetTop,
+      x: event.clientX - DOMRect.x,
+      y: event.clientY - DOMRect.y,
     };
   }
 
