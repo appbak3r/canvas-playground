@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useRef } from "react";
 import { CanvasObject, Point } from "../lib/CanvasObject";
 import { SurfaceContext } from "../components/SurfaceContext";
 
@@ -8,16 +8,31 @@ export const useMoveable = (
 ) => {
   const { canvas } = useContext(SurfaceContext);
 
+  const moveStart = useRef<Point | null>(null);
+
   useLayoutEffect(() => {
-    const handlePointerDown = () => {
+    const handlePointerDown = (event: PointerEvent) => {
+      moveStart.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
       canvas.element.addEventListener("pointermove", handlePointerMove);
     };
     const handlePointerUp = () => {
+      moveStart.current = null;
       canvas.element.removeEventListener("pointermove", handlePointerMove);
     };
 
     const handlePointerMove = (event: PointerEvent) => {
-      onMove({ x: event.movementX, y: event.movementY });
+      onMove({
+        x: event.clientX - moveStart.current!.x,
+        y: event.clientY - moveStart.current!.y,
+      });
+
+      moveStart.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
     };
 
     object.on("pointerdown", handlePointerDown);
