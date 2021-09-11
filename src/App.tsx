@@ -29,6 +29,7 @@ export const App = () => {
   const forceUpdate = useForceUpdate();
   const centerCircleRef = useRef<CircleObject | null>(null);
   const [centerCircle, setCenterCircle] = useState<Point>();
+  const informationRef = useRef<TextObject | null>(null);
 
   const circleRefs = [
     useRef<CircleObject | null>(null),
@@ -115,6 +116,7 @@ export const App = () => {
     });
 
     updateCenterCircle();
+    updateInformation();
   };
 
   const onParallelogramChange = (config: ParallelogramObjectConfig) => {
@@ -138,6 +140,24 @@ export const App = () => {
 
       forceUpdate();
     }
+    updateInformation();
+  };
+
+  const updateInformation = () => {
+    const parallelogramArea = parallelogramRef.current?.getArea();
+    const parallelogramCenter = parallelogramRef.current?.getCenter();
+
+    const circleRadius = centerCircleRef.current?.config.radius;
+
+    const information = [
+      `Parallelogram area: ${parallelogramArea}`,
+      `Parallelogram center: ${parallelogramCenter?.x}:${parallelogramCenter?.y}`,
+      `Circle radius: ${circleRadius}`,
+    ];
+
+    informationRef.current?.configure({
+      text: information.join("\n"),
+    });
   };
 
   return (
@@ -150,6 +170,12 @@ export const App = () => {
       </StyledToolbar>
 
       <Surface onClick={handleSurfaceClick}>
+        {circles.current.length === 4 && (
+          <>
+            <Text x={15} y={150} text="Information:" fill="white" />
+            <Text x={15} y={170} text={""} fill="white" ref={informationRef} />
+          </>
+        )}
         {centerCircle && (
           <Circle
             ref={centerCircleRef}

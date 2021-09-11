@@ -25,7 +25,13 @@ export class TextObject extends CanvasObject<TextObjectConfig> {
       canvas.setFillStyle(this.config.fill);
     }
 
-    canvas.context.fillText(text, x * canvas.dpi, y * canvas.dpi);
+    text.split("\n").forEach((text, i) => {
+      canvas.context.fillText(
+        text,
+        x * canvas.dpi,
+        y * canvas.dpi + canvas.fontSize * 1.33 * canvas.dpi * i
+      );
+    });
 
     canvas.clearStyle();
   }

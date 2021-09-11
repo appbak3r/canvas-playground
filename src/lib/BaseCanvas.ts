@@ -37,6 +37,10 @@ export class BaseCanvas {
     return this.config.dpi;
   }
 
+  get fontSize(): number {
+    return this.config.font.size;
+  }
+
   constructor(element: HTMLCanvasElement) {
     this.element = element;
     this.context = this.element.getContext("2d") as CanvasRenderingContext2D;
