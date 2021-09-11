@@ -2,7 +2,13 @@ import { Surface } from "./components/Surface";
 import { Circle } from "./components/Circle";
 import { Text } from "./components/Text";
 import { Parallelogram } from "./components/Parallelogram";
-import { StyledAppContainer, GlobalStyles } from "./styles";
+import {
+  StyledAppContainer,
+  GlobalStyles,
+  StyledButton,
+  StyledText,
+  StyledToolbar,
+} from "./styles";
 import { RefObject, useCallback, useRef, useState } from "react";
 import { CircleObject } from "./lib/shapes/CircleObject";
 import {
@@ -13,6 +19,7 @@ import { Point } from "./lib/CanvasObject";
 import { TextObject } from "./lib/shapes/TextObject";
 import { getCircleRadiusByArea } from "./lib/utils";
 import { useForceUpdate } from "./hooks/useForceUpdate";
+import { IoReloadSharp } from "react-icons/io5";
 
 const MaxCircles = 4;
 const MaxUserCreatedCircles = 3;
@@ -136,7 +143,11 @@ export const App = () => {
   return (
     <StyledAppContainer>
       <GlobalStyles />
-      <button onClick={onReset}>reset</button>
+      <StyledToolbar>
+        <StyledButton onClick={onReset} aria-label="Reset canvas">
+          <IoReloadSharp />
+        </StyledButton>
+      </StyledToolbar>
 
       <Surface onClick={handleSurfaceClick}>
         {centerCircle && (
@@ -192,6 +203,9 @@ export const App = () => {
           />
         ))}
       </Surface>
+      {circles.current.length === 0 && (
+        <StyledText>Click anywhere on the canvas to start</StyledText>
+      )}
     </StyledAppContainer>
   );
 };
