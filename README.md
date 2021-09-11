@@ -2,6 +2,11 @@
 
 This projects demonstrates how to work with HTML5 Canvas.
 
+### Demo
+https://canvas-react-playground.netlify.app/
+
+### Features
+
 - 🧱 Multiple canvas objects ( Circle, Parallelogram, Text )
 - 🔗 React components
 
@@ -32,3 +37,4 @@ npm run test
 - [ ] 👆 Touch devices support
 - [ ] Cover React components with unit tests
 - [ ] Add more shapes
+- [ ] Synchronise state and React components
