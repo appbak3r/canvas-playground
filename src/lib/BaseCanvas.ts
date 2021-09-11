@@ -86,7 +86,8 @@ export class BaseCanvas {
   }
 
   destroy() {
-    this.element.parentElement?.removeChild(this.element);
+    this.objects.clear();
+    this.clear();
   }
 
   setFillStyle(fillStyle: CanvasFillStrokeStyles["fillStyle"]) {

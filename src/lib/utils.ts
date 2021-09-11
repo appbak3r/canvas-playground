@@ -24,7 +24,7 @@ export const getPointerPosition = (event: PointerEvent | MouseEvent): Point => {
   };
 };
 
-export const distanceBetweenCoords = (a: Point, b: Point): number => {
+export const getDistanceBetweenCoords = (a: Point, b: Point): number => {
   return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 };
 
@@ -34,9 +34,9 @@ export const distanceBetweenCoords = (a: Point, b: Point): number => {
  */
 export const getTriangleArea = (...points: Point[]) => {
   const [a, b, c] = points;
-  const AB = distanceBetweenCoords(a, b);
-  const AC = distanceBetweenCoords(a, c);
-  const BC = distanceBetweenCoords(b, c);
+  const AB = getDistanceBetweenCoords(a, b);
+  const AC = getDistanceBetweenCoords(a, c);
+  const BC = getDistanceBetweenCoords(b, c);
 
   const perimeter = (AB + AC + BC) / 2;
 
@@ -49,7 +49,7 @@ export const getTriangleArea = (...points: Point[]) => {
  * Calculates parallelogram area by finding sub triangle area
  */
 export const getParallelogramArea = (...points: Point[]): number => {
-  return getTriangleArea(...points) * 2;
+  return parseFloat((getTriangleArea(...points) * 2).toFixed(2));
 };
 
 export const getCircleRadiusByArea = (area: number) => {

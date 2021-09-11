@@ -31,16 +31,11 @@ export class ParallelogramObject extends CanvasObject<ParallelogramObjectConfig>
 
   configure(config: Partial<ParallelogramObjectConfig>, silent?: boolean) {
     this.config = Object.assign({}, this.config, config);
+    const { a, b, c } = this.config;
 
-    this.updateFourthCoord();
+    this.config.d = { x: a.x + c.x - b.x, y: a.y + c.y - b.y };
 
     super.configure(this.config, silent);
-  }
-
-  updateFourthCoord() {
-    const { a, b, c } = this.config;
-    this.config.d = { x: a.x + c.x - b.x, y: a.y + c.y - b.y };
-    return this.config.d;
   }
 
   private drawLine(canvas: CanvasController, end: Point) {
@@ -49,7 +44,7 @@ export class ParallelogramObject extends CanvasObject<ParallelogramObjectConfig>
     context.lineTo(end.x * canvas.dpi, end.y * canvas.dpi);
   }
 
-  getCenter() {
+  getCenter(): Point {
     const { a, b, c, d } = this.config;
 
     return {
@@ -58,7 +53,7 @@ export class ParallelogramObject extends CanvasObject<ParallelogramObjectConfig>
     };
   }
 
-  getArea() {
+  getArea(): number {
     const { a, b, c } = this.config;
 
     return getParallelogramArea(a, b, c);

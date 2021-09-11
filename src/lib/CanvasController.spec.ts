@@ -1,3 +1,4 @@
+import { fireEvent } from "@testing-library/react";
 import { CanvasController } from "./CanvasController";
 import { CircleObject } from "./shapes/CircleObject";
 import { createBlankCanvas } from "./utils";
@@ -104,5 +105,30 @@ describe("CanvasController", () => {
     canvas.redraw();
 
     expect(canvas.element.toDataURL()).not.toEqual(previousState);
+  });
+
+  it("should remove objects & clear canvas on destroy", () => {
+    const object = new CircleObject({ x: 10, y: 10, radius: 10, fill: "red" });
+    canvas.add(object);
+    canvas.destroy();
+    canvas.redraw();
+    expect(canvas.element.toDataURL()).toEqual(createBlankCanvas().toDataURL());
+  });
+
+  it("should add click event listeners", () => {
+    const fn = jest.fn();
+
+    canvas.events.on("click", fn);
+    fireEvent.click(canvas.element);
+
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
+
+  it("should remove event listeners on destroy", () => {
+    const fn = jest.fn();
+    canvas.events.on("click", fn);
+    canvas.destroy();
+    fireEvent.click(canvas.element);
+    expect(fn).not.toBeCalled();
   });
 });

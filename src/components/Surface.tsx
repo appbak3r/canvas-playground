@@ -9,11 +9,14 @@ import { SurfaceContext } from "./SurfaceContext";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { CanvasController } from "../lib/CanvasController";
+import { Point } from "../lib/CanvasObject";
 
-// TODO: surface onClick should pass event with relative coords
 export const Surface = forwardRef<
   CanvasController,
-  { children: ReactNode } & HTMLAttributes<HTMLCanvasElement>
+  {
+    children: ReactNode;
+    onClick: (event: MouseEvent & { data: Point }) => void;
+  } & Omit<HTMLAttributes<HTMLCanvasElement>, "onClick">
 >(({ children, onClick, ...rest }, forwardedRef) => {
   const canvasRef = useRef<HTMLCanvasElement>();
 

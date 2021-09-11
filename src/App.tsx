@@ -3,13 +3,7 @@ import { Circle } from "./components/Circle";
 import { Text } from "./components/Text";
 import { Parallelogram } from "./components/Parallelogram";
 import { StyledAppContainer, GlobalStyles } from "./styles";
-import {
-  MouseEventHandler,
-  useCallback,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useCallback, useRef, useState } from "react";
 import { CircleObject } from "./lib/shapes/CircleObject";
 import {
   ParallelogramObject,
@@ -18,34 +12,29 @@ import {
 import { Point } from "./lib/CanvasObject";
 import { TextObject } from "./lib/shapes/TextObject";
 import { getCircleRadiusByArea } from "./lib/utils";
+import { useForceUpdate } from "./hooks/useForceUpdate";
 
-const forceUpdateReducer = (i: number) => i + 1;
-
-export const useForceUpdate = () => {
-  const [, forceUpdate] = useReducer(forceUpdateReducer, 0);
-  return forceUpdate;
-};
+const MaxCircles = 4;
+const MaxUserCreatedCircles = 3;
 
 export const App = () => {
   const circles = useRef<Point[]>([]);
   const forceUpdate = useForceUpdate();
-  const [fill, setFill] = useState("blue");
-
-  const centerCircleRef = useRef<CircleObject>();
+  const centerCircleRef = useRef<CircleObject | null>(null);
   const [centerCircle, setCenterCircle] = useState<Point>();
 
   const circleRefs = [
-    useRef<CircleObject>(),
-    useRef<CircleObject>(),
-    useRef<CircleObject>(),
-    useRef<CircleObject>(),
+    useRef<CircleObject | null>(null),
+    useRef<CircleObject | null>(null),
+    useRef<CircleObject | null>(null),
+    useRef<CircleObject | null>(null),
   ];
 
   const textRefs = [
-    useRef<TextObject>(),
-    useRef<TextObject>(),
-    useRef<TextObject>(),
-    useRef<TextObject>(),
+    useRef<TextObject | null>(null),
+    useRef<TextObject | null>(null),
+    useRef<TextObject | null>(null),
+    useRef<TextObject | null>(null),
   ];
 
   const onReset = () => {
@@ -54,29 +43,52 @@ export const App = () => {
     forceUpdate();
   };
 
-  const parallelogramRef = useRef<ParallelogramObject>();
+  const parallelogramRef = useRef<ParallelogramObject | null>(null);
 
-  const handleSurfaceClick: MouseEventHandler = useCallback(
-    event => {
-      if (circles.current.length < 3) {
-        circles.current.push((event as any).data as Point);
+  const handleSurfaceClick = useCallback(
+    (event: MouseEvent & { data: Point }) => {
+      if (circles.current.length < MaxUserCreatedCircles) {
+        circles.current.push(event.data as Point);
         forceUpdate();
       }
     },
     [forceUpdate]
   );
 
-  const handleCircleChange = (index: number) => (_: any) => {
-    if (circles.current.length !== 4) {
+  const updateCenterCircle = () => {
+    centerCircleRef.current?.configure(
+      {
+        ...parallelogramRef.current!.getCenter(),
+        radius: getCircleRadiusByArea(parallelogramRef.current!.getArea()),
+      },
+      false
+    );
+  };
+
+  const updateCircleTextInfo = (
+    point: Point,
+    textRef: RefObject<TextObject>
+  ) => {
+    textRef.current?.configure(
+      {
+        ...point,
+        text: `${point.x}:${point.y}`,
+      },
+      true
+    );
+  };
+
+  const handleCircleChange = (index: number) => () => {
+    if (circles.current.length !== MaxCircles) {
       return;
     }
 
-    const points = ["a", "b", "c", "b"];
-    const newConfig: any = {};
+    const points = ["a", "b", "c", "b"] as const;
+    const newConfig: Partial<{ [key in typeof points[number]]: Point }> = {};
 
     newConfig[points[index]] = {
-      x: circleRefs[index].current?.config.x,
-      y: circleRefs[index].current?.config.y,
+      x: circleRefs[index].current!.config.x,
+      y: circleRefs[index].current!.config.y,
     };
 
     parallelogramRef.current!.configure(newConfig, true);
@@ -92,51 +104,25 @@ export const App = () => {
 
     parallelogramPoints.forEach((point, i) => {
       circleRefs[index === 3 ? 1 : i].current?.configure(point, true);
-      textRefs[i].current?.configure(
-        {
-          ...point,
-          text: `${point.x}:${point.y}`,
-        },
-        true
-      );
+      updateCircleTextInfo(point, textRefs[i]);
     });
 
-    // TODO: radius and all size props should respect canvas DPI
-    centerCircleRef.current?.configure(
-      {
-        ...parallelogramRef.current!.getCenter(),
-        radius: getCircleRadiusByArea(parallelogramRef.current!.getArea()) * 2,
-      },
-      false
-    );
+    updateCenterCircle();
   };
 
-  // TODO: radius and all size props should respect canvas DPI
   const onParallelogramChange = (config: ParallelogramObjectConfig) => {
-    centerCircleRef.current?.configure(
-      {
-        ...parallelogramRef.current!.getCenter(),
-        radius: getCircleRadiusByArea(parallelogramRef.current!.getArea()) * 2,
-      },
-      false
-    );
+    updateCenterCircle();
 
-    if (circles.current.length === 4 && config.d) {
+    if (circles.current.length === MaxCircles && config.d) {
       const points = [config.a, config.b, config.c, config.d] as Point[];
+
       points.forEach((point, index) => {
         circleRefs[index].current?.configure(point, true);
-        textRefs[index].current?.configure(
-          {
-            ...point,
-            text: `${point.x}:${point.y}`,
-          },
-          true
-        );
+        updateCircleTextInfo(point, textRefs[index]);
       });
     }
 
-    if (circles.current.length === 3 && config.d) {
-      setFill("red");
+    if (circles.current.length === MaxUserCreatedCircles && config.d) {
       circles.current.push({
         x: config.d.x,
         y: config.d.y,
@@ -155,7 +141,7 @@ export const App = () => {
       <Surface onClick={handleSurfaceClick}>
         {centerCircle && (
           <Circle
-            ref={centerCircleRef as any}
+            ref={centerCircleRef}
             {...centerCircle}
             moveable={false}
             stroke="yellow"
@@ -178,11 +164,7 @@ export const App = () => {
                 y: circles.current[2].y,
               }}
               stroke="blue"
-              ref={node => {
-                if (node) {
-                  parallelogramRef.current = node;
-                }
-              }}
+              ref={parallelogramRef}
               onChange={onParallelogramChange}
             />
           </>
@@ -192,9 +174,9 @@ export const App = () => {
             key={index}
             x={circle.x}
             y={circle.y}
-            fill={"white"}
-            fontSize={20}
-            ref={textRefs[index] as any}
+            fill="white"
+            fontSize={16}
+            ref={textRefs[index]}
             text={`${circle.x}:${circle.y}`}
           />
         ))}
@@ -203,13 +185,9 @@ export const App = () => {
             key={index}
             x={circle.x}
             y={circle.y}
-            radius={11 * 2}
-            stroke={fill}
-            ref={node => {
-              if (node) {
-                circleRefs[index].current = node;
-              }
-            }}
+            radius={11}
+            stroke="red"
+            ref={circleRefs[index]}
             onChange={handleCircleChange(index)}
           />
         ))}

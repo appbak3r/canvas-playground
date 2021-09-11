@@ -17,7 +17,7 @@ export class CircleObject extends CanvasObject<CircleObjectConfig> {
     };
 
     canvas.context.beginPath();
-    canvas.context.arc(point.x, point.y, radius, 0, 2 * Math.PI);
+    canvas.context.arc(point.x, point.y, radius * canvas.dpi, 0, 2 * Math.PI);
     canvas.context.closePath();
 
     super.draw(canvas);

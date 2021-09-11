@@ -44,6 +44,12 @@ export class CanvasController extends BaseCanvas {
   }
 
   destroy() {
+    this.element.removeEventListener("click", this.hitCanvas.onClick);
+    this.element.removeEventListener(
+      "pointerdown",
+      this.hitCanvas.onPointerDown
+    );
+    this.element.removeEventListener("click", this.onClick);
     super.destroy();
     this.hitCanvas.destroy();
   }
