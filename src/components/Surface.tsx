@@ -74,7 +74,6 @@ export const Surface = forwardRef<
       if (onClick) {
         canvasController?.events.off("click", onClick);
       }
-      canvasController?.destroy();
       window.cancelAnimationFrame(timer);
     };
   }, [canvasController, onClick]);

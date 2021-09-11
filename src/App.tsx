@@ -19,7 +19,7 @@ import { Point } from "./lib/CanvasObject";
 import { TextObject } from "./lib/shapes/TextObject";
 import { getCircleRadiusByArea } from "./lib/utils";
 import { useForceUpdate } from "./hooks/useForceUpdate";
-import { IoReloadSharp } from "react-icons/io5";
+import { IoReloadSharp, IoInformation } from "react-icons/io5";
 
 const MaxCircles = 4;
 const MaxUserCreatedCircles = 3;
@@ -166,6 +166,32 @@ export const App = () => {
       <StyledToolbar>
         <StyledButton onClick={onReset} aria-label="Reset canvas">
           <IoReloadSharp />
+        </StyledButton>
+        <StyledButton
+          onClick={() => {
+            alert(
+              `
+==== CANVAS PLAYGROUND ====
+This program draws a parallelogram based on three provided points.
+It also creates a circle with the same area as the parallelogram.
+Circle center is also aligned with the parallelogram center.
+
+Author: https://github.com/appbak3r
+
+Basic usage:
+
+1. Click on canvas to set 3 points of parallelogram
+2. Drag points if you need to change the parallelogram
+3. See information about the parallelogram and circle on the right
+
+Have fun!
+P.S. Sorry didn't have time to create a more readable dialog. xoxo
+              `
+            );
+          }}
+          aria-label="About program"
+        >
+          <IoInformation />
         </StyledButton>
       </StyledToolbar>
 

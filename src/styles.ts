@@ -51,5 +51,6 @@ export const StyledToolbar = styled.nav`
   left: 0;
   padding: 15px;
   display: grid;
+  grid-auto-flow: column;
   gap: 15px;
 `;
