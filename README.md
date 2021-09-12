@@ -1,8 +1,11 @@
 # Canvas Playground 😱
 
+[![CircleCI](https://circleci.com/gh/appbak3r/canvas-playground/tree/main.svg?style=svg)](https://circleci.com/gh/appbak3r/canvas-playground/tree/main)
+
 This projects demonstrates how to work with HTML5 Canvas.
 
 ### Demo
+
 https://canvas-react-playground.netlify.app/
 
 ### Features
