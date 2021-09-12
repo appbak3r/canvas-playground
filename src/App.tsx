@@ -152,7 +152,7 @@ export const App = () => {
     const information = [
       `Parallelogram area: ${parallelogramArea}`,
       `Parallelogram center: ${parallelogramCenter?.x}:${parallelogramCenter?.y}`,
-      `Circle radius: ${circleRadius}`,
+      `Circle radius: ${circleRadius?.toFixed(2)}`,
     ];
 
     informationRef.current?.configure({

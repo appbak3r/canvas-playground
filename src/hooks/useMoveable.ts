@@ -25,8 +25,8 @@ export const useMoveable = (
 
     const handlePointerMove = (event: PointerEvent) => {
       onMove({
-        x: event.clientX - moveStart.current!.x,
-        y: event.clientY - moveStart.current!.y,
+        x: Math.floor(event.clientX - moveStart.current!.x),
+        y: Math.floor(event.clientY - moveStart.current!.y),
       });
 
       moveStart.current = {
