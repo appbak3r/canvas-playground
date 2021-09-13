@@ -3,6 +3,10 @@ import styled, { createGlobalStyle } from "styled-components";
 export const StyledAppContainer = styled.div`
   width: 100%;
   height: 100%;
+
+  canvas {
+    touch-action: none;
+  }
 `;
 
 export const GlobalStyles = createGlobalStyle`

@@ -12,6 +12,7 @@ https://canvas-react-playground.netlify.app/
 
 - 🧱 Multiple canvas objects ( Circle, Parallelogram, Text )
 - 🔗 React components
+- 👆 Touch devices support
 
 ## Prerequisites
 
@@ -37,7 +38,6 @@ npm run test
 
 ### Roadmap
 
-- [ ] 👆 Touch devices support
 - [ ] Cover React components with unit tests
 - [ ] Add more shapes
 - [ ] Synchronise state and React components
