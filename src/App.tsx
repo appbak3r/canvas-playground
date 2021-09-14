@@ -182,7 +182,7 @@ Basic usage:
 
 1. Click on canvas to set 3 points of parallelogram
 2. Drag points if you need to change the parallelogram
-3. See information about the parallelogram and circle on the right
+3. See information about the parallelogram and circle on the left
 
 Have fun!
 P.S. Sorry didn't have time to create a more readable dialog. xoxo
