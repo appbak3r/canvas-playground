@@ -80,7 +80,7 @@ export const App = () => {
     textRef.current?.configure(
       {
         ...point,
-        text: `${point.x}:${point.y}`,
+        text: `${point.x.toFixed(2)}:${point.y.toFixed(2)}`,
       },
       true
     );
@@ -150,8 +150,10 @@ export const App = () => {
     const circleRadius = centerCircleRef.current?.config.radius;
 
     const information = [
-      `Parallelogram area: ${parallelogramArea}`,
-      `Parallelogram center: ${parallelogramCenter?.x}:${parallelogramCenter?.y}`,
+      `Parallelogram area: ${parallelogramArea?.toFixed(2)}`,
+      `Parallelogram center: ${parallelogramCenter?.x.toFixed(
+        2
+      )}:${parallelogramCenter?.y.toFixed(2)}`,
       `Circle radius: ${circleRadius?.toFixed(2)}`,
     ];
 

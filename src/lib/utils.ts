@@ -49,7 +49,7 @@ export const getTriangleArea = (...points: Point[]) => {
  * Calculates parallelogram area by finding sub triangle area
  */
 export const getParallelogramArea = (...points: Point[]): number => {
-  return parseFloat((getTriangleArea(...points) * 2).toFixed(2));
+  return getTriangleArea(...points) * 2;
 };
 
 export const getCircleRadiusByArea = (area: number) => {

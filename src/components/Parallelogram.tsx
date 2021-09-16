@@ -6,18 +6,24 @@ import {
 import { useMoveable } from "../hooks/useMoveable";
 import { CanvasObjectProps, useCanvasObject } from "../hooks/useCanvasObject";
 
-type ParallelogramProps = CanvasObjectProps<ParallelogramObjectConfig>;
+type ParallelogramProps = CanvasObjectProps<ParallelogramObjectConfig> & {
+  moveable?: boolean;
+};
 
 export const Parallelogram = forwardRef<
   ParallelogramObject,
   ParallelogramProps
->(({ children, ...props }, ref) => {
+>(({ children, moveable = true, ...props }, ref) => {
   const parallelogram = useCanvasObject<
     ParallelogramObject,
     ParallelogramObjectConfig
   >(ParallelogramObject, props, ref);
 
   useMoveable(parallelogram, delta => {
+    if (!moveable) {
+      return;
+    }
+
     parallelogram.configure({
       a: {
         x: parallelogram.config.a!.x + delta.x,
