@@ -33,6 +33,6 @@ describe("Canvas | Shapes | Parallelogram", () => {
     });
 
     canvasObject.configure({});
-    expect(canvasObject.getArea()).toEqual(4);
+    expect(canvasObject.getArea().toFixed(2)).toStrictEqual("4.00");
   });
 });
