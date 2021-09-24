@@ -49,12 +49,7 @@ export const Surface = forwardRef<
   }, [canvasRef]);
 
   useEffect(() => {
-    const redraw = () => {
-      return window.requestAnimationFrame(() => {
-        canvasController?.redraw();
-        redraw();
-      });
-    };
+    canvasController?.redraw();
 
     if (onClick) {
       canvasController?.events.on("click", onClick);
@@ -68,13 +63,10 @@ export const Surface = forwardRef<
       });
     });
 
-    const timer = redraw();
-
     return () => {
       if (onClick) {
         canvasController?.events.off("click", onClick);
       }
-      window.cancelAnimationFrame(timer);
     };
   }, [canvasController, onClick]);
 

@@ -14,6 +14,7 @@ export class BaseCanvas {
   readonly context: CanvasRenderingContext2D;
   readonly element: HTMLCanvasElement;
   protected readonly objects: Map<string, CanvasObject> = new Map();
+  protected hasChanges = false;
 
   private config: CanvasConfig = {
     dpi: 1,
@@ -54,6 +55,7 @@ export class BaseCanvas {
     this.element.style.height = `${height}px`;
     this.element.width = width * dpi;
     this.element.height = height * dpi;
+    this.hasChanges = true;
     this.redraw();
   }
 
@@ -61,9 +63,17 @@ export class BaseCanvas {
    * Clears canvas and draws all added objects
    */
   redraw(): void {
-    this.clear();
-    this.objects.forEach(canvasObject => {
-      canvasObject.draw(this);
+    if (!this.hasChanges) {
+      return;
+    }
+
+    this.hasChanges = false;
+
+    window.requestAnimationFrame(() => {
+      this.clear();
+      this.objects.forEach(canvasObject => {
+        canvasObject.draw(this);
+      });
     });
   }
 

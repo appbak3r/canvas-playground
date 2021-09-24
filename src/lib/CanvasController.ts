@@ -25,22 +25,26 @@ export class CanvasController extends BaseCanvas {
   add<T extends CanvasObject>(object: T): T {
     super.add(object);
     this.hitCanvas.add(object);
+    object.on("change", this.onObjectChange);
+    this.onObjectChange();
     return object;
   }
 
   remove<T extends CanvasObject>(object: T): void {
     super.remove(object);
+    object.off("change", this.onObjectChange);
+    this.onObjectChange();
     this.hitCanvas.remove(object);
   }
 
   redraw() {
     super.redraw();
+    this.hitCanvas.clear();
     this.hitCanvas.redraw();
   }
 
   clear() {
     super.clear();
-    this.hitCanvas.clear();
   }
 
   destroy() {
@@ -53,6 +57,11 @@ export class CanvasController extends BaseCanvas {
     super.destroy();
     this.hitCanvas.destroy();
   }
+
+  private onObjectChange = () => {
+    this.hasChanges = true;
+    this.redraw();
+  };
 
   private onClick = (event: MouseEvent) => {
     this.events.trigger("click", {
