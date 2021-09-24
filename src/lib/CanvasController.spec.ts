@@ -6,9 +6,14 @@ import { createBlankCanvas } from "./utils";
 describe("CanvasController", () => {
   let canvas: CanvasController;
   let redrawSpy: jest.SpyInstance;
+  let requestAnimationFrameSpy: jest.SpyInstance;
 
   beforeEach(() => {
     const canvasElement = createBlankCanvas();
+
+    requestAnimationFrameSpy = jest
+      .spyOn(window, "requestAnimationFrame")
+      .mockImplementation(((cb: Function) => cb()) as any);
 
     canvas = new CanvasController(canvasElement);
     redrawSpy = jest.spyOn(canvas, "redraw");
@@ -16,6 +21,7 @@ describe("CanvasController", () => {
 
   afterEach(() => {
     redrawSpy.mockClear();
+    requestAnimationFrameSpy.mockRestore();
   });
 
   it("should accept canvas controller and have 2d context", () => {
