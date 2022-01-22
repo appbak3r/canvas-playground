@@ -13,7 +13,7 @@
     "@types/react-dom": "^17.0.9",
     "color-hash": "^2.0.1",
     "evnty": "^0.6.14",
-    "nanoid": "^3.1.25",
+    "nanoid": "^3.1.31",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
